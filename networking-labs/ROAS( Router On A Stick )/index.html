@@ -2,47 +2,82 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Router On A Stick(ROAS)</title>
+<title>Router On A Stick (ROAS)</title>
+
 <style>
-body{background:#0b0f17;color:#e6edf3;font-family:Arial;line-height:1.7}
-.container{max-width:900px;margin:auto;padding:50px 20px}
-h1,h2{color:#22c55e}
-h2{margin-top:30px}
-.back{color:#22c55e;text-decoration:none}
+body {
+    background:#0b0f17;
+    color:#e6edf3;
+    font-family:Arial;
+    line-height:1.7;
+}
+.container {
+    max-width:900px;
+    margin:auto;
+    padding:50px 20px;
+}
+h1, h2 {
+    color:#22c55e;
+}
+h2 {
+    margin-top:30px;
+}
+.back {
+    color:#22c55e;
+    text-decoration:none;
+}
+pre {
+    background:#111827;
+    padding:15px;
+    border-radius:8px;
+    overflow-x:auto;
+}
+ul {
+    margin-top:10px;
+}
 </style>
 </head>
+
 <body>
 <div class="container">
 
 <a class="back" href="../index.html">← Back to Networking Labs</a>
 
-<h1>Router On A Stick(ROAS)</h1>
+<h1>Router On A Stick (ROAS)</h1>
 
 <h2>Definition</h2>
 <p>
-Router-on-a-Stick is a method used to enable communication between multiple VLANs using a single physical router interface.
-It is called “stick” because only one cable (one interface) connects the router to the switch.
+Router-on-a-Stick (ROAS) is a method used to enable communication between multiple VLANs 
+using a single physical router interface.
+</p>
+<p>
+It is called “stick” because only one physical cable connects the router to the switch.
 </p>
 
 <h2>How It Works</h2>
+
+<h3>1️⃣ Switch Side</h3>
 <p>
-1️⃣Switch Side
+The switch port connected to the router is configured as a trunk port.
+</p>
 
-The switch port connected to router is configured as:
-
-Config: 
+<pre>
 switchport mode trunk
+</pre>
 
-This trunk carries traffic of multiple VLANs.
+<p>
+This trunk link carries traffic from multiple VLANs to the router.
+</p>
 
-2️⃣ Router Side
+<h3>2️⃣ Router Side</h3>
+<p>
+Instead of using multiple physical interfaces, we create logical subinterfaces 
+on a single router interface.
+</p>
 
-Instead of using multiple physical interfaces, we create:
+<p>Example configuration:</p>
 
-👉 Subinterfaces
-
-Example:
-
+<pre>
 interface g0/0.10
  encapsulation dot1Q 10
  ip address 192.168.10.1 255.255.255.0
@@ -50,25 +85,31 @@ interface g0/0.10
 interface g0/0.20
  encapsulation dot1Q 20
  ip address 192.168.20.1 255.255.255.0
+</pre>
 
-Each subinterface:
-Belongs to one VLAN
-Has one gateway IP
-Routes traffic between VLANs
-</p>
+<ul>
+<li>Each subinterface belongs to one VLAN.</li>
+<li>Each subinterface has its own default gateway IP.</li>
+<li>The router routes traffic between VLANs.</li>
+</ul>
 
-<h2>Why we need it ? </h2>
+<h2>Why We Need It</h2>
+
 <p>
 By default:
+</p>
 
-Devices in same VLAN → can communicate ✅
-Devices in different VLANs → cannot communicate ❌
+<ul>
+<li>Devices in the same VLAN → can communicate ✅</li>
+<li>Devices in different VLANs → cannot communicate ❌</li>
+</ul>
 
-To allow different VLANs to talk to each other, we need:
+<p>
+To allow communication between different VLANs, we need Inter-VLAN Routing.
+</p>
 
-👉 Inter-VLAN Routing
-
-Router-on-a-Stick is one way to do that.
+<p>
+Router-on-a-Stick is one common method to achieve Inter-VLAN Routing.
 </p>
 
 </div>
